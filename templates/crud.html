@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CRUD Operations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='crudStyle.css') }}">
+</head>
+<body>
+    <div class="crud-container">
+        <h2>Query Management System</h2>
+        
+        <!--Tab system where you can alternate between View, Add, Delete, Update tabs -->
+
+        <div class="tabs">
+            <button class="tab-button" onclick="openTab(event, 'View')">View</button>
+            <button class="tab-button" onclick="openTab(event, 'Add')">Add</button>
+            <button class="tab-button" onclick="openTab(event, 'Delete')">Delete</button>
+            <button class="tab-button" onclick="openTab(event, 'Update')">Update</button>
+        </div>
+
+
+        <!--Viewing tab content-->
+
+        <div id="View" class = "tab-content">
+            <h3>Enter serial number</h3>
+            {% if error %}
+            <p style = "color: red">Please enter a valid value</p>
+            {% endif %}
+            <form action="/validate" method="post">
+                <input type="text" name="serial_number" placeholder="Enter serial number">
+                <input type="submit" value="Submit">
+            </form>
+            <br>
+            <table>
+                <thead>
+                    <tr>
+                        <th>S. No.</th>
+                        <th>Name</th>
+                        <th>Email ID</th>
+                        <th>Phone No.</th>
+                        <th>Address</th>
+                        <th>Query Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for value in data %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+
+
+        <!--Adding tab content-->
+
+        <div id="Add" class="tab-content">
+            <h3>Add record</h3>
+            <form action = "/add" method="POST">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name">
+                
+                <label for="email">Email ID:</label>
+                <input type="email" id="email" name="email">
+                
+                <label for="phone">Phone No.:</label>
+                <input type="text" id="phone" name="phone">
+                
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address">
+                
+                <label for="query_message">Query Message:</label>
+                <textarea id="query_message" name="query_message"></textarea>
+                
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        
+        
+        <!--Delete tab content-->
+
+        <div id="Delete" class="tab-content">
+            <h3>Delete</h3>
+            <form action = '\delete' method = "post">
+                <label for = "serial_number">Enter serial number:</label>
+                <input type = "text" id="serial_number" name = "serial_number">
+
+                <label for = "confirm_serial_number">Confirm serial number:</label>
+                <input type = "text" id="confirm_serial_number" name = "confirm_serial_number">
+
+                <input type="submit" value="Delete">
+            </form>
+        </div>
+        
+
+        <!--Update record tab content-->
+
+        <div id="Update" class="tab-content">
+            <h2>Update Record</h2>
+            <form action="/update" method="post">
+                <label for="serial_number">Serial No.:</label>
+                <input type="text" id="serial_number" name="serial_number">
+                
+                <label for="column_header">Column to Update:</label>
+                <select name="column_header" id="column_header">
+                    <option value=1>Name</option>
+                    <option value=2>Email ID</option>
+                    <option value=3>Phone No.</option>
+                    <option value=4>Address</option>
+                    <option value=5>Query Message</option>    
+                </select>
+                
+                <label for="new_value">New Value:</label>
+                <input type="text" id="new_value" name="new_value">
+                
+                <input type="submit" value="Update">
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabbuttons;
+
+            // Getting all the tabs and hiding them
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Getting all the buttons and removing the 'active' state from them
+            tabbuttons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabbuttons.length; i++) {
+                tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
+            }
+
+            // Adding the active state to the selected button for design purposes
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+        // Default open tab
+        document.addEventListener("DOMContentLoaded", function(){
+            document.querySelector(".tab-button").click();
+        });
+    </script>
+</body>
+</html>
